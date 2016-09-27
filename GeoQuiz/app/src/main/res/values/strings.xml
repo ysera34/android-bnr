@@ -5,4 +5,10 @@
     <string name="false_button">false</string>
     <string name="correct_toast">correct</string>
     <string name="incorrect_toast">incorrect</string>
+    <string name="next_button">next question</string>
+    <string name="question_no1">Question NO1</string>
+    <string name="question_no2">Question NO2</string>
+    <string name="question_no3">Question NO3</string>
+    <string name="question_no4">Question NO4</string>
+    <string name="question_no5">Question NO5</string>
 </resources>
