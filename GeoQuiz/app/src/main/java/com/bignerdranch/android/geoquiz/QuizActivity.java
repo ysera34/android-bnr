@@ -12,6 +12,7 @@ public class QuizActivity extends AppCompatActivity {
     private TextView mQuestionTextView;
     private Button mTrueButton;
     private Button mFalseButton;
+    private Button mBeforeButton;
     private Button mNextButton;
 
     private Question[] mQuestionsBank = new Question[] {
@@ -31,11 +32,20 @@ public class QuizActivity extends AppCompatActivity {
         mQuestionTextView = (TextView) findViewById(R.id.question_text_view);
         mTrueButton = (Button) findViewById(R.id.true_button);
         mFalseButton = (Button) findViewById(R.id.false_button);
+        mBeforeButton = (Button) findViewById(R.id.before_button);
         mNextButton = (Button) findViewById(R.id.next_button);
 
 //        int question = mQuestionsBank[mCurrentIndex].getTextResId();
 //        mQuestionTextView.setText(question);
         updateQuestion();
+
+        mQuestionTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(),
+                        mQuestionTextView.getText().toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
 
         mTrueButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,6 +61,13 @@ public class QuizActivity extends AppCompatActivity {
 //                Toast.makeText(QuizActivity.this,
 //                        R.string.incorrect_toast, Toast.LENGTH_SHORT).show();
                 checkAnswer(false);
+            }
+        });
+        mBeforeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCurrentIndex = (mCurrentIndex + (mQuestionsBank.length - 1)) % mQuestionsBank.length;
+                updateQuestion();
             }
         });
         mNextButton.setOnClickListener(new View.OnClickListener() {
