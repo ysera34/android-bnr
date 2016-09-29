@@ -12,4 +12,9 @@
     <string name="question_no3">Question NO3</string>
     <string name="question_no4">Question NO4</string>
     <string name="question_no5">Question NO5</string>
+
+    <string name="warning_text">Do you really see the solution?</string>
+    <string name="show_answer_button">see the solution</string>
+    <string name="cheat_button">cheating!</string>
+    <string name="judgment_toast">cheating is bad.</string>
 </resources>

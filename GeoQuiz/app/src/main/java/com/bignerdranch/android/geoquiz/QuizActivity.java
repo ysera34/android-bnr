@@ -1,5 +1,6 @@
 package com.bignerdranch.android.geoquiz;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -18,6 +19,7 @@ public class QuizActivity extends AppCompatActivity {
     private Button mFalseButton;
     private Button mBeforeButton;
     private Button mNextButton;
+    private Button mCheatButton;
 
     private Question[] mQuestionsBank = new Question[] {
             new Question(R.string.question_no1, true),
@@ -38,6 +40,7 @@ public class QuizActivity extends AppCompatActivity {
         mFalseButton = (Button) findViewById(R.id.false_button);
         mBeforeButton = (Button) findViewById(R.id.before_button);
         mNextButton = (Button) findViewById(R.id.next_button);
+        mCheatButton = (Button) findViewById(R.id.cheat_button);
 
 //        int question = mQuestionsBank[mCurrentIndex].getTextResId();
 //        mQuestionTextView.setText(question);
@@ -89,6 +92,13 @@ public class QuizActivity extends AppCompatActivity {
                 updateQuestion();
             }
         });
+        mCheatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(QuizActivity.this, CheatActivity.class);
+                startActivity(i);
+            }
+        });
     }
 
     @Override
@@ -106,7 +116,7 @@ public class QuizActivity extends AppCompatActivity {
     private void checkAnswer(boolean userPressedTrue) {
         boolean answerIsTrue = mQuestionsBank[mCurrentIndex].isAnswerTrue();
 
-        int messageResId = 0;
+        int messageResId;
 
         if (userPressedTrue == answerIsTrue) {
             messageResId = R.string.correct_toast;
