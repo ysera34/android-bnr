@@ -80,9 +80,12 @@ public class CrimeListFragment extends Fragment {
                     mCrime.getTitle() + " is Selected!!", Toast.LENGTH_SHORT).show();
 
 //            Intent intent = new Intent(getActivity(), CrimeActivity.class);
-            Intent intent = CrimeActivity.newIntent(getActivity(), mCrime.getId());
+//            Intent intent = CrimeActivity.newIntent(getActivity(), mCrime.getId());
 //            startActivity(intent);
-            startActivityForResult(intent, REQUEST_CRIME);
+//            startActivityForResult(intent, getAdapterPosition());
+
+            Intent intent = CrimePagerActivity.newIntent(getActivity(), mCrime.getId());
+            startActivity(intent);
         }
     }
 
@@ -90,7 +93,8 @@ public class CrimeListFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CRIME) {
-
+//            Log.i("onActivityResult", REQUEST_CRIME + "notifyItemChanged");
+            mAdapter.notifyItemChanged(requestCode);
         }
     }
 
