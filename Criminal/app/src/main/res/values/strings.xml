@@ -9,4 +9,10 @@
     <string name="crime_solved_label">Solved</string>
     <string name="date_picker_title">Crime Date</string>
     <string name="time_picker_title">Crime Time</string>
+
+    <string name="add_crime">Add Crime</string>
+    <string name="remove_crime">Remove Crime</string>
+    <string name="show_subtitle">show sub title</string>
+    <string name="hide_subtitle">hide sub title</string>
+    <string name="subtitle_format">%1$s matter</string>
 </resources>

@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -86,8 +87,7 @@ public class CrimeFragment extends Fragment {
         mDateButton = (Button) v.findViewById(R.id.crime_date);
 //        mDateButton.setText(mCrime.getDate().toString());
         updateDate();
-//        String date = DateFormat.format("EEEE, MMM dd, yyyy", mCrime.getDate()).toString();
-//        mDateButton.setText(date);
+
 //        mDateButton.setEnabled(false);
         mDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,7 +101,8 @@ public class CrimeFragment extends Fragment {
         });
 
         mTimeButton = (Button) v.findViewById(R.id.crime_time);
-        mTimeButton.setText(mCrime.getTime().toString());
+//        mTimeButton.setText(mCrime.getTime().toString());
+        updateTime();
         mTimeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -151,11 +152,19 @@ public class CrimeFragment extends Fragment {
         } else if (requestCode == REQUEST_TIME) {
             Date time = (Date) data.getSerializableExtra(TimePickerFragment.EXTRA_TIME);
             mCrime.setTime(time);
-            mTimeButton.setText(mCrime.getTime().toString());
+            updateTime();
         }
     }
 
     private void updateDate() {
-        mDateButton.setText(mCrime.getDate().toString());
+//        mDateButton.setText(mCrime.getDate().toString());
+        String dateFormat = DateFormat.format("EEEE, MMM dd, yyyy", mCrime.getDate()).toString();
+        mDateButton.setText(dateFormat);
+    }
+
+    private void updateTime() {
+//        mTimeButton.setText(mCrime.getTime().toString());
+        String timeFormat = DateFormat.format("HH:mm:ss", mCrime.getTime()).toString();
+        mTimeButton.setText(timeFormat);
     }
 }
