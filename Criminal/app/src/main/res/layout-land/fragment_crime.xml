@@ -38,6 +38,14 @@
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"/>
 
+        <Button
+            android:id="@+id/crime_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"/>
+
         <CheckBox
             android:id="@+id/crime_solved"
             android:layout_width="wrap_content"
