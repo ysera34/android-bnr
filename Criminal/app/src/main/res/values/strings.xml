@@ -15,4 +15,9 @@
     <string name="show_subtitle">show sub title</string>
     <string name="hide_subtitle">hide sub title</string>
     <string name="subtitle_format">%1$s matter</string>
+    <plurals name="subtitle_plural_format">
+        <item quantity="zero">0 crime</item>
+        <item quantity="one">1 crime</item>
+        <item quantity="other">%d crimes</item>
+    </plurals>
 </resources>
