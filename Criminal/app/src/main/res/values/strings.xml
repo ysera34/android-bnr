@@ -20,4 +20,15 @@
         <item quantity="one">1 crime</item>
         <item quantity="other">%d crimes</item>
     </plurals>
+
+    <string name="crime_suspect_text">suspect select</string>
+    <string name="crime_report_text">transmit criminal report</string>
+
+    <string name="crime_report">%1$s! this criminal happen. date : %2$s, %3$s and %4$s</string>
+    <string name="crime_report_solved">this criminal solved.</string>
+    <string name="crime_report_unsolved">this criminal unsolved.</string>
+    <string name="crime_report_no_suspect">this criminal is no suspect</string>
+    <string name="crime_report_suspect">suspect %s</string>
+    <string name="crime_report_subject">Criminal Report</string>
+    <string name="send_report">send criminal report</string>
 </resources>
