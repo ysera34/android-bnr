@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -103,7 +104,8 @@ public class CrimeListFragment extends Fragment {
                 addCrime();
                 return true;
             case R.id.menu_item_remove_crime:
-                removeCrimes();
+//                removeCrimes();
+                removeCrimesToSqlite();
                 return true;
             case R.id.menu_item_show_subtitle:
                 mSubtitleVisible = !mSubtitleVisible;
@@ -132,7 +134,7 @@ public class CrimeListFragment extends Fragment {
     }
 
     private class CrimeHolder extends RecyclerView.ViewHolder
-            implements View.OnClickListener{
+            implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
 //        public TextView mTitleTextView;
         private TextView mTitleTextView;
@@ -147,6 +149,7 @@ public class CrimeListFragment extends Fragment {
             mSolvedCheckBox = (CheckBox) itemView.findViewById(R.id.list_item_solved_check_box);
 
             itemView.setOnClickListener(this);
+            mSolvedCheckBox.setOnCheckedChangeListener(this);
         }
 
         private Crime mCrime;
@@ -170,6 +173,10 @@ public class CrimeListFragment extends Fragment {
 
             Intent intent = CrimePagerActivity.newIntent(getActivity(), mCrime.getId());
             startActivity(intent);
+        }
+
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         }
     }
 
@@ -210,6 +217,10 @@ public class CrimeListFragment extends Fragment {
         public int getItemCount() {
             return mCrimes.size();
         }
+
+        public void setCrimes(List<Crime> crimes) {
+            mCrimes = crimes;
+        }
     }
 
     private void updateUI() {
@@ -222,6 +233,7 @@ public class CrimeListFragment extends Fragment {
             mAdapter = new CrimeAdapter(crimes);
             mCrimeRecyclerView.setAdapter(mAdapter);
         } else {
+            mAdapter.setCrimes(crimes);
             mAdapter.notifyDataSetChanged();
         }
         updateSubtitle();
@@ -247,6 +259,20 @@ public class CrimeListFragment extends Fragment {
             }
         }
         mAdapter.notifyDataSetChanged();
+    }
 
+    private void removeCrimesToSqlite() {
+        CrimeLab crimeLab = CrimeLab.get(getActivity());
+        List<Crime> crimes = crimeLab.getCrimes();
+
+        Iterator<Crime> iterator = crimes.iterator();
+        while (iterator.hasNext()) {
+            Crime crime = iterator.next();
+            if (crime.isSolved()) {
+                CrimeLab.get(getActivity()).deleteCrime(crime);
+            }
+        }
+        updateUI();
+        mAdapter.notifyDataSetChanged();
     }
 }
