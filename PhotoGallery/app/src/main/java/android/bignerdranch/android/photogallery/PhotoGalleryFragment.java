@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,8 @@ public class PhotoGalleryFragment extends Fragment {
     private RecyclerView mPhotoRecyclerView;
     private List<GalleryItem> mGalleryItems;
 
+    private int lastFetchedPage = 1;
+
     public static PhotoGalleryFragment newInstance() {
 
         Bundle args = new Bundle();
@@ -39,7 +42,7 @@ public class PhotoGalleryFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
         mGalleryItems = new ArrayList<>();
-        new FetchItemsTask().execute();
+        new FetchItemsTask().execute(lastFetchedPage);
     }
 
     @Nullable
@@ -50,8 +53,22 @@ public class PhotoGalleryFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_photo_gallery, container, false);
         mPhotoRecyclerView = (RecyclerView) view.findViewById(R.id.fragment_photo_gallery_recycler_view);
         mPhotoRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
-
         setupAdapter();
+        mPhotoRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                int lastPosition =  ((PhotoAdapter) mPhotoRecyclerView.getAdapter()).getLastPosition();
+                int loadBufferPosition = 1;
+                if (lastPosition >= mPhotoRecyclerView.getAdapter().getItemCount()
+                        - ((GridLayoutManager) mPhotoRecyclerView.getLayoutManager()).getSpanCount()
+                        - loadBufferPosition) {
+                    new FetchItemsTask().execute(++lastPosition);
+                }
+            }
+        });
+
+
 
         return view;
     }
@@ -70,6 +87,11 @@ public class PhotoGalleryFragment extends Fragment {
     private class PhotoAdapter extends RecyclerView.Adapter<PhotoHolder> {
 
         private List<GalleryItem> mGalleryItems;
+        private int lastPosition;
+
+        public int getLastPosition() {
+            return lastPosition;
+        }
 
         public PhotoAdapter(List<GalleryItem> galleryItems) {
             mGalleryItems = galleryItems;
@@ -85,6 +107,8 @@ public class PhotoGalleryFragment extends Fragment {
         public void onBindViewHolder(PhotoHolder holder, int position) {
             GalleryItem galleryItem = mGalleryItems.get(position);
             holder.bindGalleryItem(galleryItem);
+            lastPosition = position;
+            Log.i(TAG, "last position is " + String.valueOf(lastPosition));
         }
 
         @Override
@@ -110,20 +134,34 @@ public class PhotoGalleryFragment extends Fragment {
         }
     }
 
-    private class FetchItemsTask extends AsyncTask<Void, Void, List<GalleryItem>> {
-
+    private class FetchItemsTask extends AsyncTask<Integer, Void, List<GalleryItem>> {
         @Override
-        protected List<GalleryItem> doInBackground(Void... voids) {
+        protected List<GalleryItem> doInBackground(Integer... integers) {
+//            return new FlickrFetchr().fetchItems(getString(R.string.flickr_api_key));
+            return new FlickrFetchr().fetchItems(getString(R.string.flickr_api_key), integers[0]);
+        }
+
+        //        @Override
+//        protected List<GalleryItem> doInBackground(Integer... params) {
 //            new FlickrFetchr().fetchItems(getString(R.string.flickr_api_key));
 //            return null;
-            return new FlickrFetchr().fetchItems(getString(R.string.flickr_api_key));
-        }
+//            return new FlickrFetchr().fetchItems(getString(R.string.flickr_api_key));
+//        }
 
         @Override
         protected void onPostExecute(List<GalleryItem> galleryItems) {
             super.onPostExecute(galleryItems);
-            mGalleryItems = galleryItems;
-            setupAdapter();
+//            mGalleryItems = galleryItems;
+//            setupAdapter();
+
+            if (lastFetchedPage > 1) {
+                mGalleryItems.addAll(galleryItems);
+                mPhotoRecyclerView.getAdapter().notifyDataSetChanged();
+            } else {
+                mGalleryItems = galleryItems;
+                setupAdapter();
+            }
+            lastFetchedPage++;
         }
     }
 }
