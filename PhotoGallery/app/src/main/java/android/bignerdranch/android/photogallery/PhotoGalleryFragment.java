@@ -183,7 +183,16 @@ public class PhotoGalleryFragment extends Fragment {
         @Override
         protected List<GalleryItem> doInBackground(Integer... integers) {
 //            return new FlickrFetchr().fetchItems(getString(R.string.flickr_api_key));
-            return new FlickrFetchr().fetchItems(getString(R.string.flickr_api_key), integers[0]);
+
+//            return new FlickrFetchr(null).fetchItems(getString(R.string.flickr_api_key), integers[0]);
+
+            String query = "robot";
+
+            if (query == null) {
+                return new FlickrFetchr(getString(R.string.flickr_api_key)).fetchRecentPhotos();
+            } else {
+                return new FlickrFetchr(getString(R.string.flickr_api_key)).searchPhotos(query);
+            }
         }
 
         //        @Override
