@@ -27,6 +27,9 @@ public class FlickrFetchr {
     private static final String SEARCH_METHOD = "flickr.photos.search";
     private static Uri ENDPOINT = null;
 
+    public FlickrFetchr() {
+    }
+
     public FlickrFetchr(String apiKey) {
         ENDPOINT = Uri.parse("https://api.flickr.com/services/rest/")
                 .buildUpon()
