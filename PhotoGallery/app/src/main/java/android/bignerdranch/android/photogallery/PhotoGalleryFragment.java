@@ -128,6 +128,7 @@ public class PhotoGalleryFragment extends Fragment {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 Log.d(TAG, "QueryTextSubmit : " + query);
+                QueryPreferences.setStoredQuery(getActivity(), query);
                 updateItems();
                 return true;
             }
@@ -138,10 +139,32 @@ public class PhotoGalleryFragment extends Fragment {
                 return false;
             }
         });
+
+        searchView.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String query = QueryPreferences.getStoredQuery(getActivity());
+                searchView.setQuery(query, false);
+            }
+        });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+//        return super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case R.id.menu_item_clear :
+                QueryPreferences.setStoredQuery(getActivity(), null);
+                updateItems();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void updateItems() {
-        new FetchItemsTask().execute(lastFetchedPage);
+        String query = QueryPreferences.getStoredQuery(getActivity());
+        new FetchItemsTask(query).execute(lastFetchedPage);
 //        new FetchItemsTask().execute(lastFetchedPage);
     }
 
@@ -215,13 +238,24 @@ public class PhotoGalleryFragment extends Fragment {
     }
 
     private class FetchItemsTask extends AsyncTask<Integer, Void, List<GalleryItem>> {
+
+        private String mQuery;
+
+        public FetchItemsTask() {
+        }
+
+        public FetchItemsTask(String query) {
+            mQuery = query;
+        }
+
         @Override
         protected List<GalleryItem> doInBackground(Integer... integers) {
 //            return new FlickrFetchr().fetchItems(getString(R.string.flickr_api_key));
 
 //            return new FlickrFetchr(null).fetchItems(getString(R.string.flickr_api_key), integers[0]);
 
-            String query = "robot";
+//            String query = "robot";
+            String query = mQuery;
 
             if (query == null) {
                 return new FlickrFetchr(getString(R.string.flickr_api_key)).fetchRecentPhotos();
